@@ -1,0 +1,388 @@
+/* ═══════════════════════════════════════════════════
+   ShopFlow Dashboard — Folha de Estilos Principal
+   Sessão 2: Layout base, cores e responsividade
+   ═══════════════════════════════════════════════════ */
+
+/* ── 1. Variáveis CSS (cores e tipografia) ── */
+:root {
+  --cor-primaria: #1e88e5; /* Azul ShopFlow */
+  --cor-secundaria: #ff6f00; /* Laranja */
+  --cor-fundo: #f0f4f8; /* Fundo geral cinzento claro */
+  --cor-painel: #ffffff; /* Fundo dos painéis */
+  --cor-texto: #212121; /* Texto principal */
+  --cor-texto-suave: #757575; /* Texto secundário */
+  --sombra-painel: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --raio-borda: 10px;
+  --espaco: 1rem; /* Unidade de espaçamento base */
+}
+
+/* ── 2. Reset e base ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ── 3. Cabeçalho ── */
+.sf-header {
+  background: linear-gradient(135deg, var(--cor-primaria), #1565c0);
+  color: white;
+  padding: var(--espaco) calc(var(--espaco) * 2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.sf-header__logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.sf-logo-icon {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 1.4rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.sf-header h1 {
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+.sf-header p {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.sf-header__info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.2rem;
+}
+
+.sf-relogio {
+  font-size: 1.8rem;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 2px;
+}
+
+.sf-data {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+/* ── 4. Grelha principal (CSS Grid) ── */
+.sf-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: auto auto auto;
+  gap: var(--espaco);
+  padding: var(--espaco);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Painel de stock ocupa as duas primeiras linhas */
+.sf-painel--stock {
+  grid-row: 1 / 3;
+}
+
+/* Gráfico ocupa toda a largura */
+.sf-painel--grafico {
+  grid-column: 1 / 3;
+}
+
+/* ── 5. Painéis ── */
+.sf-painel {
+  background: var(--cor-painel);
+  border-radius: var(--raio-borda);
+  box-shadow: var(--sombra-painel);
+  padding: var(--espaco);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sf-painel__cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid var(--cor-fundo);
+}
+
+.sf-painel__cabecalho h2 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--cor-texto);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── 6. Badges e indicadores ── */
+.sf-badge {
+  background: var(--cor-primaria);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.sf-indicador {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sf-indicador--online {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+.sf-indicador--offline {
+  background: #ffebee;
+  color: #c62828;
+}
+
+/* ── 7. Métricas de vendas ── */
+.sf-vendas-contador {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.sf-metrica {
+  background: var(--cor-fundo);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sf-metrica__valor {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--cor-primaria);
+}
+
+.sf-metrica__label {
+  font-size: 0.75rem;
+  color: var(--cor-texto-suave);
+  text-transform: uppercase;
+}
+
+/* ── 8. Feed de vendas ── */
+.sf-feed {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 200px;
+}
+
+.sf-feed-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem;
+  border-bottom: 1px solid var(--cor-fundo);
+  font-size: 0.85rem;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── 9. Lista de produtos (placeholder) ── */
+.sf-lista-produtos {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sf-placeholder {
+  color: var(--cor-texto-suave);
+  font-style: italic;
+  font-size: 0.9rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+/* ── 10. Filtros ── */
+.sf-painel__filtros {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.sf-btn {
+  background: var(--cor-fundo);
+  border: 1px solid var(--cor-primaria);
+  color: var(--cor-primaria);
+  padding: 4px 12px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.sf-btn:hover,
+.sf-btn--activo {
+  background: var(--cor-primaria);
+  color: white;
+}
+
+/* ── 11. Chat do assistente ── */
+.sf-chat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.sf-chat__mensagens {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: var(--cor-fundo);
+  border-radius: 8px;
+}
+
+.sf-chat__msg {
+  padding: 0.6rem 0.9rem;
+  border-radius: 12px;
+  max-width: 85%;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.sf-chat__msg--bot {
+  background: var(--cor-primaria);
+  color: white;
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+
+.sf-chat__msg--user {
+  background: #e3f2fd;
+  color: var(--cor-texto);
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+
+.sf-chat__input {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.sf-chat__input input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.sf-chat__input input:focus {
+  border-color: var(--cor-primaria);
+}
+
+.sf-chat__input button {
+  background: var(--cor-primaria);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.sf-chat__input button:hover:not(:disabled) {
+  background: var(--cor-secundaria);
+}
+
+.sf-chat__input button:disabled,
+.sf-chat__input input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ── 12. Responsividade ── */
+@media (max-width: 1024px) {
+  .sf-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .sf-painel--stock {
+    grid-row: auto;
+  }
+  .sf-painel--grafico {
+    grid-column: 1 / 3;
+  }
+}
+
+@media (max-width: 600px) {
+  .sf-grid {
+    grid-template-columns: 1fr;
+    padding: 0.5rem;
+  }
+  .sf-painel--grafico {
+    grid-column: auto;
+  }
+  .sf-header {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+  .sf-header__info {
+    align-items: center;
+  }
+}
+.tema-escuro {
+  --cor-fundo: #121212;
+  --cor-painel: #1e1e1e;
+  --cor-texto: #e0e0e0;
+}
+#estado-loja {
+  margin-left: 20px;
+  font-weight: bold;
+}
