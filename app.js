@@ -138,10 +138,10 @@ function atualizarEstadoLoja() {
   const elemento = document.getElementById('estado-loja');
 
   if (estaAberta()) {
-    elemento.textContent = '🟢 Aberta';
+    elemento.textContent = 'Aberta';
     elemento.className = 'aberta';
   } else {
-    elemento.textContent = '🔴 Fechada';
+    elemento.textContent = 'Fechada';
     elemento.className = 'fechada';
   }
 }

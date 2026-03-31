@@ -386,3 +386,10 @@ body {
   margin-left: 20px;
   font-weight: bold;
 }
+.aberta {
+  color: green;
+}
+
+.fechada {
+  color: red;
+}
