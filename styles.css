@@ -393,3 +393,195 @@ body {
 .fechada {
   color: red;
 }
+
+/* ── 13. Cartões de produto (adicionado na Sessão 3) ── */
+ 
+.sf-produto-cartao {
+    background: var(--cor-fundo);
+    border-radius: 8px;
+    padding: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+    border-left: 3px solid var(--cor-primaria);
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+ 
+.sf-produto-cartao:hover {
+    transform: translateX(3px);
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.1);
+}
+ 
+.sf-produto-cartao--esgotado {
+    border-left-color: #BDBDBD;
+    opacity: 0.6;
+}
+ 
+.sf-produto-info {
+    flex: 1;
+}
+ 
+.sf-produto-nome {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--cor-texto);
+    margin-bottom: 0.2rem;
+}
+ 
+.sf-produto-categoria {
+    font-size: 0.72rem;
+    color: var(--cor-primaria);
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+ 
+.sf-produto-direita {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    align-items: flex-end;
+}
+ 
+.sf-produto-preco {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--cor-texto);
+}
+ 
+.sf-produto-stock {
+    font-size: 0.75rem;
+    padding: 2px 7px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+ 
+.sf-produto-stock--ok       { background: #E8F5E9; color: #2E7D32; }
+.sf-produto-stock--baixo    { background: #FFF3E0; color: #E65100; }
+.sf-produto-stock--esgotado { background: #FFEBEE; color: #C62828; }
+ 
+/* Mensagem quando não há produtos na categoria */
+.sf-sem-produtos {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--cor-texto-suave);
+    font-size: 0.9rem;
+}
+
+
+/* ── 14. Painel de vendas em tempo real (Sessão 4) ── */
+ 
+/* Cada linha do feed de vendas */
+.sf-feed-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: auto auto;
+  gap: 0.1rem 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--cor-fundo);
+  font-size: 0.82rem;
+  animation: slideIn 0.35s ease;
+}
+
+.sf-feed-item:last-child {
+  border-bottom: none;
+}
+
+.sf-feed-produto {
+  font-weight: 600;
+  color: var(--cor-texto);
+  grid-column: 1;
+  grid-row: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sf-feed-local {
+  font-size: 0.75rem;
+  color: var(--cor-texto-suave);
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.sf-feed-valor {
+  font-weight: 700;
+  color: var(--cor-primaria);
+  grid-column: 2;
+  grid-row: 1 / 3;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* Barra de progresso animada — indica actividade WebSocket */
+.sf-ws-barra {
+  height: 3px;
+  background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria));
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.4s ease;
+}
+
+.sf-ws-barra--activa {
+  animation: wsAtividade 0.6s ease forwards;
+}
+
+@keyframes wsAtividade {
+  0%   { width: 0%; opacity: 1; }
+  70%  { width: 100%; opacity: 1; }
+  100% { width: 100%; opacity: 0; }
+}
+
+/* Pulsação no indicador Online */
+.sf-indicador--online {
+  background: #E8F5E9;
+  color: #2E7D32;
+  animation: pulsar 2s infinite;
+}
+
+@keyframes pulsar {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.6; }
+}
+
+.sf-select {
+  background: var(--cor-fundo);
+  border: 1px solid var(--cor-primaria);
+  color: var(--cor-primaria);
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+}
+
+.sf-stock-resumo {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.sf-kpi {
+  background: var(--cor-fundo);
+  border-radius: 8px;
+  padding: 0.75rem;
+  text-align: center;
+}
+
+.sf-kpi-valor {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--cor-primaria);
+}
+
+.sf-kpi-label {
+  font-size: 0.7rem;
+  color: var(--cor-texto-suave);
+  text-transform: uppercase;
+}

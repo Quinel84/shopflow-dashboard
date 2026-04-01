@@ -33,11 +33,38 @@
           <span class="sf-badge" id="badge-stock">0 produtos</span>
         </div>
         <div class="sf-painel__filtros">
-          <button class="sf-btn" data-categoria="todos">Todos</button>
+          <button class="sf-btn sf-btn--activo" data-categoria="todos">Todos</button>
           <button class="sf-btn" data-categoria="Portáteis">Portáteis</button>
-          <button class="sf-btn" data-categoria="Periféricos">
-            Periféricos
-          </button>
+          <button class="sf-btn" data-categoria="Periféricos">Periféricos</button>
+          <button class="sf-btn" data-categoria="Monitores">Monitores</button>
+          <button class="sf-btn" data-categoria="Acessórios">Acessórios</button>
+          <select id="ordenacao" class="sf-select">
+            <option value="nome">Nome (A-Z)</option>
+            <option value="preco-asc">Preço (menor primeiro)</option>
+            <option value="preco-desc">Preço (maior primeiro)</option>
+            <option value="stock">Stock (maior primeiro)</option>
+          </select>
+        </div>
+        <div class="sf-stock-resumo" id="stock-resumo">
+          <div class="sf-kpi">
+            <span class="sf-kpi-valor" id="kpi-total">0</span>
+            <span class="sf-kpi-label">Total produtos</span>
+          </div>
+
+          <div class="sf-kpi">
+            <span class="sf-kpi-valor" id="kpi-disponiveis">0</span>
+            <span class="sf-kpi-label">Com stock</span>
+          </div>
+
+          <div class="sf-kpi">
+            <span class="sf-kpi-valor" id="kpi-esgotados">0</span>
+            <span class="sf-kpi-label">Esgotados</span>
+          </div>
+
+          <div class="sf-kpi">
+            <span class="sf-kpi-valor" id="kpi-valor">0 €</span>
+            <span class="sf-kpi-label">Valor stock</span>
+          </div>
         </div>
         <div id="lista-produtos" class="sf-lista-produtos">
           <p class="sf-placeholder">A carregar produtos...</p>
@@ -62,6 +89,7 @@
             <span class="sf-metrica__label">Receita do dia</span>
           </div>
         </div>
+        <div class="sf-ws-barra" id="ws-barra"></div>
         <div id="feed-vendas" class="sf-feed">
           <p class="sf-placeholder">Aguarda ligação WebSocket...</p>
         </div>
