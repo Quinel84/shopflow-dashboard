@@ -20,6 +20,9 @@ const ShopFlow = {
     totalReceita: 0, // Actualizado na Sessão 4
     temperatura: null, // Preenchido na Sessão 7
     humidade: null, // Preenchido na Sessão 7
+    vendasPorProduto: {},  // { 'Portátil Pro': 3, 'Rato SF-M1': 7, ... }
+    vendasPorLocalidade: {},  // { 'Porto': 5, 'Braga': 2, ... }
+
   },
   ligacoes: {
     websocket: null, // Criado na Sessão 4
@@ -219,16 +222,22 @@ document.getElementById('ordenacao').addEventListener('change', (evento) => {
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log(`ShopFlow Dashboard v${ShopFlow.versao} iniciado`);
+  console.log('Sessão 2: Estrutura base criada com sucesso');
+  console.log('Próximos passos:');
+  console.log('  Sessão 3: Carregar produtos a partir de produtos.json');
+  console.log('  Sessão 4: Ligar WebSocket para vendas em tempo real');
   // Activar o primeiro botão de filtro
   const primeiroBotao = document.querySelector('.sf-btn');
   if (primeiroBotao) primeiroBotao.classList.add('sf-btn--activo');
 
   // NOVO: Carregar os produtos a partir do JSON
   carregarProdutos();
-  console.log('Sessão 2: Estrutura base criada com sucesso');
-  console.log('Próximos passos:');
-  console.log('  Sessão 3: Carregar produtos a partir de produtos.json');
-  console.log('  Sessão 4: Ligar WebSocket para vendas em tempo real');
+
+  // NOVO (Sessão 4): Ligar ao servidor WebSocket
+  ShopFlow.reconectar = true;  // Permitir reconexão automática
+  ligarWebSocket();
+
+
 });
 
 //Botão tema escuro
@@ -273,15 +282,26 @@ setInterval(atualizarEstadoLoja, 60000);
  * Actualiza os contadores de encomendas e receita.
  * @param {number} totalVendido - Valor da venda a adicionar
  */
-function actualizarContadores(totalVendido) {
+function actualizarContadores(venda) {
   ShopFlow.dados.totalVendas  += 1;
-  ShopFlow.dados.totalReceita += totalVendido;
+  ShopFlow.dados.totalReceita += venda.total;
+
+  const prod = venda.produto;
+  const loc  = venda.localidade;
+
+  ShopFlow.dados.vendasPorProduto[prod] =
+    (ShopFlow.dados.vendasPorProduto[prod] || 0) + 1;
+
+  ShopFlow.dados.vendasPorLocalidade[loc] =
+    (ShopFlow.dados.vendasPorLocalidade[loc] || 0) + 1;
 
   const elemVendas  = document.getElementById('total-vendas');
   const elemReceita = document.getElementById('total-receita');
 
   if (elemVendas)  elemVendas.textContent  = ShopFlow.dados.totalVendas;
   if (elemReceita) elemReceita.textContent  = formatarMoeda(ShopFlow.dados.totalReceita);
+
+  actualizarEstatisticas();
 }
 
 /**
@@ -373,8 +393,9 @@ function ligarWebSocket() {
 
           if (mensagem.tipo === 'venda') {
               // Processar venda: actualizar contadores e feed
-              actualizarContadores(mensagem.total);
+              actualizarContadores(mensagem);
               adicionarAoFeed(mensagem);
+              mostrarNotificacao(mensagem);
 
           } else if (mensagem.tipo === 'ligado') {
               console.log('Servidor:', mensagem.mensagem);
@@ -402,6 +423,20 @@ function ligarWebSocket() {
       setTimeout(ligarWebSocket, 5000);
   };
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  console.log(`ShopFlow Dashboard v${ShopFlow.versao} iniciado`);
+
+  const primeiroBotao = document.querySelector('.sf-btn');
+  if (primeiroBotao) primeiroBotao.classList.add('sf-btn--activo');
+
+  carregarProdutos();  // Sessão 3
+
+  // NOVO (Sessão 4): Ligar ao servidor WebSocket
+  ShopFlow.reconectar = true;  // Permitir reconexão automática
+  ligarWebSocket();
+});
+
 
 // funçao para ordenar produtos
 function ordenarProdutos(produtos, criterio) {
@@ -444,4 +479,32 @@ function actualizarResumoStock(produtos) {
   if (elDisp) elDisp.textContent = disponiveis;
   if (elEsg) elEsg.textContent = esgotados;
   if (elValor) elValor.textContent = formatarMoeda(valorTotal);
+}
+
+function actualizarEstatisticas() {
+  const prodEntries = Object.entries(ShopFlow.dados.vendasPorProduto);
+  const locEntries  = Object.entries(ShopFlow.dados.vendasPorLocalidade);
+
+  if (prodEntries.length === 0) return;
+
+  const maisProduto = prodEntries.sort((a, b) => b[1] - a[1])[0];
+  const maisLocal   = locEntries.sort((a, b) => b[1] - a[1])[0];
+
+  const elProd = document.getElementById('top-produto');
+  const elLoc  = document.getElementById('top-local');
+
+  if (elProd) elProd.textContent = `${maisProduto[0]} (${maisProduto[1]})`;
+  if (elLoc)  elLoc.textContent  = `${maisLocal[0]} (${maisLocal[1]})`;
+}
+
+function mostrarNotificacao(venda) {
+  if (venda.total < 500) return;
+
+  const notif = document.createElement('div');
+  notif.className = 'sf-notificacao';
+  notif.textContent =
+      `Venda de destaque: ${formatarMoeda(venda.total)} em ${venda.localidade}`;
+  document.body.appendChild(notif);
+
+  setTimeout(() => notif.remove(), 3000);
 }

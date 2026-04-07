@@ -585,3 +585,27 @@ body {
   color: var(--cor-texto-suave);
   text-transform: uppercase;
 }
+
+.sf-estatisticas {
+  font-size: 0.8rem;
+  color: var(--cor-texto-suave);
+}
+
+.sf-notificacao {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  background: var(--cor-secundaria);
+  color: white;
+  padding: 0.75rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  animation: entrarNotif 0.3s ease;
+  z-index: 1000;
+}
+
+@keyframes entrarNotif {
+  from { transform: translateX(120%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
