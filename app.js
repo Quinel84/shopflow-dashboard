@@ -163,6 +163,7 @@ function renderizarProdutos(produtos) {
       const classeCartao = produto.stock === 0 ? 'sf-produto-cartao sf-produto-cartao--esgotado'
                                                : 'sf-produto-cartao';
       const precoFormatado = formatarMoeda(produto.preco);
+      const precoUSD = ShopFlow.dados.taxaUSD ? ` / ${(produto.preco * ShopFlow.dados.taxaUSD).toFixed(2)} $`: '';
 
       return `
           <div class="${classeCartao}" data-id="${produto.id}">
@@ -171,7 +172,7 @@ function renderizarProdutos(produtos) {
                   <div class="sf-produto-categoria">${produto.categoria}</div>
               </div>
               <div class="sf-produto-direita">
-                  <span class="sf-produto-preco">${precoFormatado}</span>
+                  <span class="sf-produto-preco">${precoFormatado}${precoUSD}</span>
                   <span class="sf-produto-stock sf-produto-stock--${estado.classe}">
                       ${estado.texto}
                   </span>
@@ -222,6 +223,7 @@ document.getElementById('ordenacao').addEventListener('change', (evento) => {
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log(`ShopFlow Dashboard v${ShopFlow.versao} iniciado`);
+  ShopFlow.cache = {};
   console.log('Sessão 2: Estrutura base criada com sucesso');
   console.log('Próximos passos:');
   console.log('  Sessão 3: Carregar produtos a partir de produtos.json');
@@ -237,6 +239,13 @@ document.addEventListener('DOMContentLoaded', () => {
   ShopFlow.reconectar = true;  // Permitir reconexão automática
   ligarWebSocket();
 
+  // NOVO — Sessão 5: APIs externas
+  actualizarPainelMeteo();
+  actualizarPainelCambios();
+
+  // Actualização periódica automática
+  setInterval(actualizarPainelMeteo,   CONFIG.INTERVALO_METEO);
+  setInterval(actualizarPainelCambios, CONFIG.INTERVALO_CAMBIOS);
 
 });
 
@@ -507,4 +516,189 @@ function mostrarNotificacao(venda) {
   document.body.appendChild(notif);
 
   setTimeout(() => notif.remove(), 3000);
+}
+
+// ── Painel de Meteorologia ───────────────────────────
+ 
+// Inicializar o objecto de cache no ShopFlow
+// (adicionar junto às outras propriedades do ShopFlow)
+// ShopFlow.cache = {};  <- já adicionado na inicialização abaixo
+ 
+/**
+ * Converte o código de ícone da OpenWeatherMap num emoji.
+ */
+function iconeMeteoEmoji(iconCode) {
+  const mapa = {
+      '01d':'☀️', '01n':'🌙',  '02d':'⛅', '02n':'☁️',
+      '03d':'☁️', '03n':'☁️',  '04d':'☁️', '04n':'☁️',
+      '09d':'🌧️','09n':'🌧️', '10d':'🌦️','10n':'🌧️',
+      '11d':'⛈️','11n':'⛈️', '13d':'❄️', '13n':'❄️',
+      '50d':'🌫️','50n':'🌫️',
+  };
+  return mapa[iconCode] || '🌡️';
+}
+
+/**
+* Pede dados à OpenWeatherMap com cache de 10 minutos.
+*/
+async function pedirDadosMeteo() {
+  const agora = Date.now();
+  if (ShopFlow.cache.meteo &&
+      (agora - ShopFlow.cache.meteoTimestamp) < CONFIG.INTERVALO_METEO) {
+      return ShopFlow.cache.meteo;
+  }
+  const url = `https://api.openweathermap.org/data/2.5/weather` +
+              `?q=${CONFIG.CIDADE},${CONFIG.PAIS}` +
+              `&appid=${CONFIG.OPENWEATHER_KEY}` +
+              `&units=metric&lang=pt`;
+  const resposta = await fetch(url);
+  if (!resposta.ok) throw new Error(`OpenWeatherMap: erro ${resposta.status}`);
+  const dados = await resposta.json();
+  ShopFlow.cache.meteo = dados;
+  ShopFlow.cache.meteoTimestamp = agora;
+  return dados;
+}
+
+//Desafio sessao 5 - previsao
+async function pedirPrevisaoMeteo() {
+  const url = `https://api.openweathermap.org/data/2.5/forecast?q=${CONFIG.CIDADE},${CONFIG.PAIS}&appid=${CONFIG.OPENWEATHER_KEY}&units=metric&lang=pt&cnt=3`;
+
+  const resposta = await fetch(url);
+
+  if (!resposta.ok) {
+    throw new Error(`Previsão erro ${resposta.status}`);
+  }
+
+  return await resposta.json();
+}
+
+/**
+* Actualiza o painel de meteorologia no DOM.
+*/
+async function actualizarPainelMeteo() {
+  const painel = document.getElementById('meteo-conteudo');
+  if (!painel) return;
+  try {
+      const d = await pedirDadosMeteo();
+      const previsao = await pedirPrevisaoMeteo(); //Desafio previsao sessao 5
+      const temp      = Math.round(d.main.temp);
+      const sensacao  = Math.round(d.main.feels_like);
+      const humidade  = d.main.humidity;
+      const vento     = (d.wind.speed * 3.6).toFixed(1);
+      const descricao = d.weather[0].description;
+      const icone     = iconeMeteoEmoji(d.weather[0].icon);
+      const hora      = new Date(d.dt * 1000).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' });
+
+      //Desafio previsao sessao 5
+      const htmlPrevisao = previsao.list.map(item => {
+        const hora = new Date(item.dt * 1000)
+          .toLocaleTimeString('pt-PT', {
+            hour: '2-digit',
+            minute: '2-digit'
+          });
+      
+        const temp = Math.round(item.main.temp);
+        const icone = iconeMeteoEmoji(item.weather[0].icon);
+      
+        return `
+          <div class="sf-previsao-item">
+            <span>${hora}</span>
+            <span>${icone}</span>
+            <span>${temp}°</span>
+          </div>
+        `;
+      }).join('');
+
+      painel.innerHTML = `
+          <div class="sf-meteo-principal">
+              <span class="sf-meteo-icone">${icone}</span>
+              <div>
+                  <div class="sf-meteo-temp">${temp}°C</div>
+                  <div class="sf-meteo-descricao">${descricao}</div>
+              </div>
+          </div>
+          <div class="sf-meteo-detalhes">
+              <div class="sf-meteo-detalhe">
+                  <span>Sensação</span><span>${sensacao}°C</span>
+              </div>
+              <div class="sf-meteo-detalhe">
+                  <span>Humidade</span><span>${humidade}%</span>
+              </div>
+              <div class="sf-meteo-detalhe">
+                  <span>Vento</span><span>${vento} km/h</span>
+              </div>
+              <div class="sf-meteo-detalhe">
+                  <span>Pressão</span><span>${d.main.pressure} hPa</span>
+              </div>
+          </div>
+          <div class="sf-meteo-actualizado">Actualizado às ${hora}</div>
+          <div class="sf-previsao">${htmlPrevisao}</div>` //desafio sessao 5 previsao
+  } catch (erro) {
+      console.error('Erro meteorologia:', erro);
+      painel.innerHTML = `<div class="sf-api-erro">
+          Não foi possível obter dados meteorológicos.<br>
+          Verifique a chave API em config.js.</div>`;
+  }
+}
+
+// ── Painel de Câmbios ────────────────────────────────
+ 
+const MOEDAS_CAMBIO = [
+  { codigo: 'USD', nome: 'Dólar americano'  },
+  { codigo: 'GBP', nome: 'Libra esterlina'  },
+  { codigo: 'CHF', nome: 'Franco suíço'     },
+];
+
+async function pedirDadosCambios() {
+  const agora = Date.now();
+  if (ShopFlow.cache.cambios &&
+      (agora - ShopFlow.cache.cambiosTimestamp) < CONFIG.INTERVALO_CAMBIOS) {
+      return ShopFlow.cache.cambios;
+  }
+  const resposta = await fetch(
+      `https://open.er-api.com/v6/latest/${CONFIG.MOEDA}`);
+  if (!resposta.ok) throw new Error(`ExchangeRate: ${resposta.status}`);
+  const dados = await resposta.json();
+  if (dados.result !== 'success') throw new Error('Resposta inválida');
+  ShopFlow.cache.cambios = dados;
+  ShopFlow.cache.cambiosTimestamp = agora;
+  return dados;
+}
+
+async function actualizarPainelCambios() {
+  const painel = document.getElementById('cambios-conteudo');
+  if (!painel) return;
+  try {
+      const dados = await pedirDadosCambios();
+      const rates = dados.rates;
+      ShopFlow.dados.taxaUSD = rates['USD']; // desafio cambios sessao 5
+      const ultimaAct = new Date(dados.time_last_update_utc)
+          .toLocaleDateString('pt-PT', {
+              day: 'numeric', month: 'long',
+              hour: '2-digit', minute: '2-digit'
+          });
+      const itensHtml = MOEDAS_CAMBIO.map(moeda => {
+          const taxa = rates[moeda.codigo];
+          if (!taxa) return '';
+          return `
+              <div class="sf-cambio-item">
+                  <div>
+                      <div class="sf-cambio-par">
+                          ${CONFIG.MOEDA} &rarr; ${moeda.codigo}
+                      </div>
+                      <div class="sf-cambio-base">${moeda.nome}</div>
+                  </div>
+                  <div class="sf-cambio-valor">${taxa.toFixed(4)}</div>
+              </div>`;
+      }).join('');
+      painel.innerHTML = `
+          <div class="sf-cambios-lista">${itensHtml}</div>
+          <div class="sf-cambios-actualizado">
+              Actualizado: ${ultimaAct}</div>`;
+  } catch (erro) {
+      console.error('Erro câmbios:', erro);
+      painel.innerHTML =
+          '<div class="sf-api-erro">Não foi possível obter dados de câmbio.</div>';
+  }
+  renderizarProdutos(ShopFlow.dados.produtos);
 }

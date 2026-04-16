@@ -609,3 +609,107 @@ body {
   from { transform: translateX(120%); opacity: 0; }
   to   { transform: translateX(0);    opacity: 1; }
 }
+
+/* ── 15. Painel de Meteorologia (Sessão 5) ── */
+ 
+.sf-meteo-principal {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.sf-meteo-icone  { font-size: 3rem; line-height: 1; }
+
+.sf-meteo-temp {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--cor-primaria);
+  line-height: 1;
+}
+
+.sf-meteo-descricao {
+  font-size: 0.85rem;
+  color: var(--cor-texto-suave);
+  text-transform: capitalize;
+  margin-top: 0.2rem;
+}
+
+.sf-meteo-detalhes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.sf-meteo-detalhe {
+  background: var(--cor-fundo);
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.78rem;
+}
+
+.sf-meteo-detalhe span:first-child {
+  color: var(--cor-texto-suave);
+  display: block;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.sf-meteo-detalhe span:last-child { font-weight: 600; color: var(--cor-texto); }
+.sf-meteo-actualizado { font-size: 0.7rem; color: var(--cor-texto-suave); margin-top: 0.5rem; font-style: italic; }
+
+/* ── 16. Painel de Câmbios (Sessão 5) ── */
+
+.sf-cambios-lista { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.25rem; }
+
+.sf-cambio-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--cor-fundo);
+  border-radius: 8px;
+  padding: 0.6rem 0.9rem;
+}
+
+.sf-cambio-par   { font-weight: 700; font-size: 0.9rem; letter-spacing: 0.5px; }
+.sf-cambio-valor { font-size: 1.1rem; font-weight: 700; color: var(--cor-primaria); }
+.sf-cambio-base  { font-size: 0.72rem; color: var(--cor-texto-suave); margin-top: 0.1rem; }
+.sf-cambios-actualizado { font-size: 0.7rem; color: var(--cor-texto-suave); margin-top: 0.5rem; font-style: italic; text-align: right; }
+
+/* Mensagem de erro de API */
+.sf-api-erro {
+  background: #FFF3E0;
+  border-left: 3px solid var(--cor-secundaria);
+  padding: 0.6rem 0.9rem;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.82rem;
+  color: #E65100;
+}
+
+/*DEsafio previsao sessao 5*/
+.sf-previsao {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.8rem;
+}
+
+.sf-previsao-item {
+  flex: 1;
+  background: var(--cor-fundo);
+  border-radius: 8px;
+  padding: 0.5rem;
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+.sf-previsao-item span {
+  display: block;
+}
+
+.sf-produto-preco small{
+  color:#777;
+  font-size:0.8rem;
+}
