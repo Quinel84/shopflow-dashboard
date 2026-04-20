@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>ShopFlow Dashboard</title>
     <link rel="stylesheet" href="styles.css" />
-  </head>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+
   <body>
     <!-- ═══ CABEÇALHO ═══ -->
     <header class="sf-header">
@@ -32,7 +35,7 @@
           <h2>Stock de Produtos</h2>
           <span class="sf-badge" id="badge-stock">0 produtos</span>
         </div>
-        <div class="sf-painel__filtros">
+        <!--<div class="sf-painel__filtros">
           <button class="sf-btn sf-btn--activo" data-categoria="todos">Todos</button>
           <button class="sf-btn" data-categoria="Portáteis">Portáteis</button>
           <button class="sf-btn" data-categoria="Periféricos">Periféricos</button>
@@ -44,31 +47,12 @@
             <option value="preco-desc">Preço (maior primeiro)</option>
             <option value="stock">Stock (maior primeiro)</option>
           </select>
-        </div>
-        <div class="sf-stock-resumo" id="stock-resumo">
-          <div class="sf-kpi">
-            <span class="sf-kpi-valor" id="kpi-total">0</span>
-            <span class="sf-kpi-label">Total produtos</span>
-          </div>
-
-          <div class="sf-kpi">
-            <span class="sf-kpi-valor" id="kpi-disponiveis">0</span>
-            <span class="sf-kpi-label">Com stock</span>
-          </div>
-
-          <div class="sf-kpi">
-            <span class="sf-kpi-valor" id="kpi-esgotados">0</span>
-            <span class="sf-kpi-label">Esgotados</span>
-          </div>
-
-          <div class="sf-kpi">
-            <span class="sf-kpi-valor" id="kpi-valor">0 €</span>
-            <span class="sf-kpi-label">Valor stock</span>
-          </div>
-        </div>
-        <div id="lista-produtos" class="sf-lista-produtos">
+        </div>--> 
+        
+        <!--<div id="lista-produtos" class="sf-lista-produtos">
           <p class="sf-placeholder">A carregar produtos...</p>
-        </div>
+        </div>-->
+        <div id="react-stock"></div>
       </section>
 
       <!-- PAINEL 2 — VENDAS EM TEMPO REAL (Sessão 4) -->
@@ -166,6 +150,7 @@
     </main>
 
     <script src="config.js"></script>
+    <script type="text/babel" src="PainelStock.jsx"></script>
     <script src="app.js"></script>
   </body>
 </html>

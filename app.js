@@ -210,14 +210,14 @@ document.querySelectorAll('.sf-btn').forEach(botao => {
 });
 
 //OrdernarProdutos - Sessao 3
-document.getElementById('ordenacao').addEventListener('change', (evento) => {
+/*document.getElementById('ordenacao').addEventListener('change', (evento) => {
   const criterio = evento.target.value;
 
   const produtosFiltrados = filtrarProdutos(ShopFlow.dados.categoriaActiva);
   const produtosOrdenados = ordenarProdutos(produtosFiltrados, criterio);
 
   renderizarProdutos(produtosOrdenados);
-});
+});*/
 
 // ── Inicialização ─────────────────────────────────────
 
@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (primeiroBotao) primeiroBotao.classList.add('sf-btn--activo');
 
   // NOVO: Carregar os produtos a partir do JSON
-  carregarProdutos();
+  //carregarProdutos();
 
   // NOVO (Sessão 4): Ligar ao servidor WebSocket
   ShopFlow.reconectar = true;  // Permitir reconexão automática
@@ -432,20 +432,6 @@ function ligarWebSocket() {
       setTimeout(ligarWebSocket, 5000);
   };
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-  console.log(`ShopFlow Dashboard v${ShopFlow.versao} iniciado`);
-
-  const primeiroBotao = document.querySelector('.sf-btn');
-  if (primeiroBotao) primeiroBotao.classList.add('sf-btn--activo');
-
-  carregarProdutos();  // Sessão 3
-
-  // NOVO (Sessão 4): Ligar ao servidor WebSocket
-  ShopFlow.reconectar = true;  // Permitir reconexão automática
-  ligarWebSocket();
-});
-
 
 // funçao para ordenar produtos
 function ordenarProdutos(produtos, criterio) {
@@ -700,5 +686,5 @@ async function actualizarPainelCambios() {
       painel.innerHTML =
           '<div class="sf-api-erro">Não foi possível obter dados de câmbio.</div>';
   }
-  renderizarProdutos(ShopFlow.dados.produtos);
+  //renderizarProdutos(ShopFlow.dados.produtos);
 }

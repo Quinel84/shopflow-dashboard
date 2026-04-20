@@ -713,3 +713,48 @@ body {
   color:#777;
   font-size:0.8rem;
 }
+
+/* ── 16. Painel de stock React (Sessão 6) ── */
+ 
+.sf-painel__filtros-react {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sf-filtros-categorias {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.sf-pesquisa {
+  width: 100%;
+  padding: 0.45rem 0.75rem;
+  border: 1px solid #DDD;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  outline: none;
+  font-family: inherit;
+}
+
+.sf-pesquisa:focus {
+  border-color: var(--cor-primaria);
+}
+
+.sf-ordenacao {
+  width: 100%;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #DDD;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  background: white;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--cor-texto);
+}
+
+.sf-ordenacao:focus {
+  outline: none;
+  border-color: var(--cor-primaria);
+}
